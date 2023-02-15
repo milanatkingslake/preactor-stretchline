@@ -276,7 +276,7 @@ Public Class CustomAction
 
         End Try
     End Function
-
+    ''GetLatestOprSeqRecoreId
     Public Function GetLatestOprSeqRecoreId(ByRef connetionString As String, ByRef orderNoPrefix As String, ByRef operationName As String) As Integer
 
         Try
