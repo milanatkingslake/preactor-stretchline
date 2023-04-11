@@ -132,3 +132,36 @@ D:\Development\Preactor\Strechline\SourceCode\20220831\K203_OpcenterCustomizatio
 D:\Development\Preactor\Strechline\SourceCode\20220831\K203_OpcenterCustomization\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.dll
 D:\Development\Preactor\Strechline\SourceCode\20220831\K203_OpcenterCustomization\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.xml
 D:\Development\Preactor\Strechline\SourceCode\20220831\K203_OpcenterCustomization\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.pdb
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\K203_OpcenterCustomization.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\K203_OpcenterCustomization.pdb
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\K203_OpcenterCustomization.xml
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\K203_OpcenterCustomization.tlb
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\Preactor.Extensibility.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\Preactor.Extensibility.EventScripts.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\Preactor.Extensibility.Planner.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\Preactor.Interop.EventScripts.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\Preactor.Interop.OpenPlanningBoard.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\Preactor.Interop.PreactorObject.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\cs\Preactor.Extensibility.resources.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\de\Preactor.Extensibility.resources.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\es\Preactor.Extensibility.resources.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\fr\Preactor.Extensibility.resources.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\hu\Preactor.Extensibility.resources.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\it\Preactor.Extensibility.resources.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\ja\Preactor.Extensibility.resources.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\ko\Preactor.Extensibility.resources.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\nl\Preactor.Extensibility.resources.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\pl\Preactor.Extensibility.resources.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\pt\Preactor.Extensibility.resources.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\ru\Preactor.Extensibility.resources.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\bin\Release\zh\Preactor.Extensibility.resources.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.K203_JobMerge.resources
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.K203_SpindleAllocation.resources
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.K203_JobSplitDetails.resources
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.Resources.resources
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.vbproj.GenerateResource.cache
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.vbproj.CoreCompileInputs.cache
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.vbproj.CopyComplete
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.dll
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.xml
+C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.pdb
