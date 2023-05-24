@@ -26,6 +26,9 @@ Public Class CustomAction
         Dim strOrderOprName As String = preactor.ReadFieldString("Orders", "Operation Name", RecordNumber)
         Dim decOrderQty As Double = preactor.ReadFieldDouble("Orders", "Quantity", RecordNumber)
         Dim strSplitJobResource As String = preactor.ReadFieldString("Orders", "Resource", RecordNumber)
+        Dim strOrderOprNo As String = preactor.ReadFieldString("Orders", "Op. No.", RecordNumber)
+        Dim erpJobNo As String = preactor.ReadFieldString("Orders", "K203_ERPJobNum.", RecordNumber)
+
         Dim decNewOrderQty As Double = 0
         Dim decBalanceOrderQty As Double = 0
 
@@ -39,7 +42,7 @@ Public Class CustomAction
         Dim strSuffix As String = ""
         Dim intSuffixNo As Integer = 0
 
-        '' ----------20-03-2022 Start - To get prefix of split jobs ---------------
+        '' ----------Get the length of the order no. ---------------
         Dim intLengthOfJobOrderNo As Integer = strOrderNo.Length()
 
         Dim strSearchWithinOrderNo As String = strOrderNo
@@ -66,26 +69,18 @@ Public Class CustomAction
 
         strOrderNo = strOrderNoBeforeHash + strOrderNoAfterHashBeforeSuffix
 
-        '' ----------20-03-2022 End ---------------
-
         '' To find the latest suffix
-        K203_OrderSerialRecordNumber = preactor.FindMatchingRecord("K203_OrderSerial", "Order No.", K203_OrderSerialRecordNumber, strParentOrderNumber)
+        K203_OrderSerialRecordNumber = preactor.FindMatchingRecord("K203_OrderSerial", "ERP Job Num", K203_OrderSerialRecordNumber, erpJobNo)
         Dim intSerial As Integer = 0
 
-        '' 28-06-2022 - Start
         If K203_OrderSerialRecordNumber <= 0 Then
             MsgBox("No relevant record in K203_OrderSerial table ")
         End If
-        '' 28-06-2022 - End
 
         'intSerial = preactor.ReadFieldInt("K203_OrderSerial", "Serial", K203_OrderSerialRecordNumber)
-        intSerial = GetOrderSerialSeq(connetionString, strOrderNo)
 
-        ''If K203_OrderSerialRecordNumber > 0 Then
-        ''intSerial = preactor.ReadFieldInt("K203_OrderSerial", "Serial", K203_OrderSerialRecordNumber)
-        ''Else
-        ''MsgBox("Not relavent first record in K203_OrderSerial table")
-        ''End If
+        '' Call OrderSerial table to get latest serial
+        intSerial = GetOrderSerialSeq(connetionString, erpJobNo)
 
         If K203_OrderSerialRecordNumber > 0 Then
             intSerial = intSerial + 1
@@ -106,7 +101,7 @@ Public Class CustomAction
 
             strNewOrderNo = strOrderNoBeforeHash + strSuffix
 
-            '' 03-04-2022- Open job order Form
+            ''Open job order Form
             oForm.strJobOrderNo = strNewOrderNo
             oForm.decJobOrderQty = decOrderQty
             oForm.isOkClick = False
@@ -129,7 +124,6 @@ Public Class CustomAction
                         preactor.WriteField("Orders", "Quantity", newBlock, decNewOrderQty)
 
                         '' Update the Operation sequence - 03-04-2022
-                        '' 23-06-2022 - preactor.WriteField("Orders", "Opr. Sequence", newBlock, strSuffix)
                         preactor.WriteField("Orders", "K203_APSOprSeq", newBlock, strSuffix)
                         Dim intK203_ERPOprSeq As Integer = preactor.ReadFieldInt("Orders", "K203_ERPOprSeq", newBlock)
                         Dim intModv As Integer = intK203_ERPOprSeq Mod 100
@@ -141,16 +135,15 @@ Public Class CustomAction
                         intK203_ERPOprSeq = CInt(strK203_ERPOprSeq)
 
                         preactor.WriteField("Orders", "K203_ERPOprSeq", newBlock, intK203_ERPOprSeq)
-                        '' Update the Order Type - 03-04-2022
+                        '' Update the Order Type 
                         preactor.WriteField("Orders", "Order Type", newBlock, "SPLIT")
 
-                        '' Update the resource for splited job -03-04-2022
+                        '' Update the resource for splited job
                         preactor.WriteField("Orders", "Resource", newBlock, strSplitJobResource)
 
-                        '' To update the secondary constraint quantity as zeero - 04-04-2022
+                        '' To update the secondary constraint quantity as zero 
                         Dim strSecondaryConstraintAllocated As String = preactor.ReadFieldString("Orders", "Secondary Constraints", newBlock, 1, 0)
 
-                        '' 21-04-2022
                         ''Dim t2 As Integer = preactor.ReadFieldInt("Orders", "Constraint Quantity", newBlock, 1, 0)
                         ''MsgBox("t2 " & t2)
 
@@ -162,24 +155,14 @@ Public Class CustomAction
                             preactor.WriteMatrixField("Orders", "Secondary Constraints", newBlock, -1, 1, 0)
                         End If
 
-                        '' Dim t3 As Integer = preactor.ReadFieldInt("Orders", "Constraint Quantity", newBlock, 1, 0)
-                        '' MsgBox("t3 " & t3)
-
-                        '' Dim t1 As String = preactor.ReadFieldString("Orders", "Secondary Constraints", newBlock, 1, 0)
-                        '' MsgBox("t1 " & t1)
-
                         ' To get the Quantity Per Hour - 04-04-2022
                         Dim strPartNo As String = preactor.ReadFieldString("Orders", "Part No.", RecordNumber)
                         Dim intOPNo As Integer = preactor.ReadFieldInt("Orders", "Op. No.", RecordNumber)
-                        '' 21-05-22 Dim decQuantityPerHour As Decimal = GetQuantityPerHour(connetionString, strPartNo, intOPNo)
-                        ''MsgBox("decQuantityPerHour " & decQuantityPerHour & " strPartNo " & strPartNo & " intOPNo " & intOPNo)
 
-                        '' 21-05-2022
                         Dim strQuantityPerHour As String = preactor.ReadFieldString("Orders", "K203_ProdstandardPerSpindle", RecordNumber)
                         Dim decQuantityPerHour As Decimal = CDec(Val("0" & strQuantityPerHour))
 
                         preactor.WriteField("Orders", "Quantity per Hour", newBlock, decQuantityPerHour)
-                        '' 21-05-22 preactor.WriteField("Orders", "K203_ProdstandardPerSpindle", newBlock, decQuantityPerHour)
                         preactor.WriteField("Orders", "K203_AllocatedSpindles", newBlock, 0)
                         preactor.WriteField("Orders", "K203_SpindleStatus", newBlock, "Not Allocated")
 
@@ -189,14 +172,15 @@ Public Class CustomAction
                         If K203_OrderSerialRecordNumber <= 0 Then
                             '' Create record for K203_OrderSerial
                             Dim newBlock_K203_OrderSerial As Integer = preactor.CreateRecord("K203_OrderSerial")
-                            Dim K203_OrderSerialRecordNum As Integer = preactor.ReadFieldInt("K203_OrderSerial", "RecordId", newBlock_K203_OrderSerial)
-                            preactor.WriteField("K203_OrderSerial", "Order No.", newBlock_K203_OrderSerial, strOrderNo)
+                            preactor.WriteField("K203_OrderSerial", "Order No.", newBlock_K203_OrderSerial, strNewOrderNo)
                             preactor.WriteField("K203_OrderSerial", "Serial", newBlock_K203_OrderSerial, intSerial)
+                            preactor.WriteField("K203_OrderSerial", "ERP Job Num", newBlock_K203_OrderSerial, erpJobNo)
+                            preactor.WriteField("K203_OrderSerial", "Op. No.", newBlock_K203_OrderSerial, strOrderOprNo)
                         Else
                             '' Update record for K203_OrderSerial
+                            preactor.WriteField("K203_OrderSerial", "Order No.", K203_OrderSerialRecordNumber, strNewOrderNo)
                             preactor.WriteField("K203_OrderSerial", "Serial", K203_OrderSerialRecordNumber, intSerial)
                         End If
-                        ''29-04-2022
                         preactor.Commit("K203_OrderSerial")
                         preactor.Commit("Orders")
                     End If
@@ -930,41 +914,45 @@ Public Class CustomAction
                 strReqResource = preactor.ReadFieldString("Orders", "Resource", x)
                 dteReqSetupStart = preactor.ReadFieldDateTime("Orders", "Setup Start", x)
 
-                Dim intLengthOrderNo As Integer = strReqOrderNumber.Length()
-                Dim strfindThis As String = "#"
-                Dim intCharEndIndex As Integer = strReqOrderNumber.IndexOf(strfindThis)
-                Dim strReqOrderNumberBeforeHash = strReqOrderNumber.Substring(0, intCharEndIndex)
-                Dim strReqOrderNumberAftereHash As String = strReqOrderNumber.Substring(intCharEndIndex + 1, intLengthOrderNo - intCharEndIndex - 1)
+                If strReqOrderNumber.ToString() IsNot "" Then
+                    Dim intLengthOrderNo As Integer = strReqOrderNumber.Length()
+                    Dim strfindThis As String = "#"
+                    Dim intCharEndIndex As Integer = strReqOrderNumber.IndexOf(strfindThis)
+                    Dim strReqOrderNumberBeforeHash = strReqOrderNumber.Substring(0, intCharEndIndex)
+                    Dim strReqOrderNumberAftereHash As String = strReqOrderNumber.Substring(intCharEndIndex + 1, intLengthOrderNo - intCharEndIndex - 1)
 
 
-                '' -28-06-2022 - End
+                    '' -28-06-2022 - End
 
-                If strReqOrderNumberAftereHash.Length = 3 Then
-                    intSuffixStartNo = strReqOrderNumber.IndexOf(strfindThis)
-                    intSuffixStartNo = intSuffixStartNo + 1
-                    Dim strReqSuffix = strReqOrderNumber.Substring(intSuffixStartNo, 3)
+                    If strReqOrderNumberAftereHash.Length = 3 Then
+                        intSuffixStartNo = strReqOrderNumber.IndexOf(strfindThis)
+                        intSuffixStartNo = intSuffixStartNo + 1
+                        Dim strReqSuffix = strReqOrderNumber.Substring(intSuffixStartNo, 3)
 
-                    dblNoOfSpindles = preactor.ReadFieldDouble("Orders", "K203_AllocatedSpindles", x)
-                    dblJobOrderQty = preactor.ReadFieldDouble("Orders", "Quantity", x)
+                        dblNoOfSpindles = preactor.ReadFieldDouble("Orders", "K203_AllocatedSpindles", x)
+                        dblJobOrderQty = preactor.ReadFieldDouble("Orders", "Quantity", x)
 
-                    '' preactor.WriteField("Orders", "Quantity per Hour", x, strOrderNumber)
+                        '' preactor.WriteField("Orders", "Quantity per Hour", x, strOrderNumber)
 
-                    If strReqOrderNumberBeforeHash = strOrderNoBeforeHash And strReqSuffix <> strJobSuffix And strReqResource = strResource And dteReqSetupStart >= dteSetupStart Then
+                        If strReqOrderNumberBeforeHash = strOrderNoBeforeHash And strReqSuffix <> strJobSuffix And strReqResource = strResource And dteReqSetupStart >= dteSetupStart Then
 
-                        dtJobMerge_sr = dtJobMerge_s.NewRow()
-                        dtJobMerge_sr("Id") = y.ToString
-                        dtJobMerge_sr("Job Order No") = strReqOrderNumber
-                        '' dtJobMerge_sr("No. of Spindles") = intNoOfSpindles
-                        dtJobMerge_sr("Allocated Spindles") = dblNoOfSpindles
-                        dtJobMerge_sr("Job Quantity") = dblJobOrderQty
+                            dtJobMerge_sr = dtJobMerge_s.NewRow()
+                            dtJobMerge_sr("Id") = y.ToString
+                            dtJobMerge_sr("Job Order No") = strReqOrderNumber
+                            '' dtJobMerge_sr("No. of Spindles") = intNoOfSpindles
+                            dtJobMerge_sr("Allocated Spindles") = dblNoOfSpindles
+                            dtJobMerge_sr("Job Quantity") = dblJobOrderQty
 
-                        dtJobMerge_s.Rows.Add(dtJobMerge_sr)
+                            dtJobMerge_s.Rows.Add(dtJobMerge_sr)
 
-                        y = y + 1
+                            y = y + 1
+                        End If
+
+                        '' x = x + 1
                     End If
-
-                    '' x = x + 1
                 End If
+
+
                 x = x + 1
             Loop While x <= intMaxRecordNo
 
@@ -1000,43 +988,50 @@ Public Class CustomAction
                     Next
                     Dim dblAfterMergeOrderQty As Double = dblOrderQty + dblTotalJobQty
 
-                    preactor.WriteField("Orders", "Quantity", RecordNumber, dblAfterMergeOrderQty)
+                        preactor.WriteField("Orders", "Quantity", RecordNumber, dblAfterMergeOrderQty)
+                        preactor.WriteField("Orders", "Order Type", RecordNumber, "MERGE")
+                        preactor.Commit("Orders")
 
                         For Each tbl_JobMergeRow As DataRow In tbl_JobMerge.Rows
 
-                            If tbl_JobMergeRow("Check").ToString() = "True" Then
-                                dblTotalJobQty = dblTotalJobQty + CDbl(tbl_JobMergeRow("Job Quantity").ToString())
+                            Try
+                                If tbl_JobMergeRow("Check").ToString() = "True" Then
+                                    dblTotalJobQty = dblTotalJobQty + CDbl(tbl_JobMergeRow("Job Quantity").ToString())
 
 
-                                intSelectRecNumber = 0
+                                    intSelectRecNumber = 0
 
-                                intSelectRecNumber = preactor.FindMatchingRecord("Orders", "Order No.", intSelectRecNumber, tbl_JobMergeRow("Job Order No").ToString())
+                                    intSelectRecNumber = preactor.FindMatchingRecord("Orders", "Order No.", intSelectRecNumber, tbl_JobMergeRow("Job Order No").ToString())
 
-                                '' MsgBox("intSelectRecNumber " & intSelectRecNumber)
-                                Dim order_No As String = preactor.ReadFieldString("Orders", "Order No.", intSelectRecNumber)
-                                Dim aPSOprSeq As Integer = preactor.ReadFieldInt("Orders", "K203_APSOprSeq", intSelectRecNumber)
-                                Dim eRPJobNum As String = preactor.ReadFieldString("Orders", "K203_ERPJobNum.", intSelectRecNumber)
-                                Dim eRPOprSeq As Integer = preactor.ReadFieldInt("Orders", "K203_ERPOprSeq", intSelectRecNumber)
-                                Dim partNo As String = preactor.ReadFieldString("Orders", "Part No.", intSelectRecNumber)
-                                Dim quantity As Double = preactor.ReadFieldDouble("Orders", "Quantity", intSelectRecNumber)
+                                    '' MsgBox("intSelectRecNumber " & intSelectRecNumber)
+                                    Dim order_No As String = preactor.ReadFieldString("Orders", "Order No.", intSelectRecNumber)
+                                    Dim aPSOprSeq As Integer = preactor.ReadFieldInt("Orders", "K203_APSOprSeq", intSelectRecNumber)
+                                    Dim eRPJobNum As String = preactor.ReadFieldString("Orders", "K203_ERPJobNum.", intSelectRecNumber)
+                                    Dim eRPOprSeq As Integer = preactor.ReadFieldInt("Orders", "K203_ERPOprSeq", intSelectRecNumber)
+                                    Dim partNo As String = preactor.ReadFieldString("Orders", "Part No.", intSelectRecNumber)
+                                    Dim quantity As Double = preactor.ReadFieldDouble("Orders", "Quantity", intSelectRecNumber)
 
-                                Dim dOrdernum As Integer = preactor.CreateRecord("K203_DeleteOrder")
-                                ''Asign "dragtemp" table to resource and setup start time
-                                'preactor.WriteField("K203_DeleteOrders", "RecordId.", dOrdernum, 1)
-                                preactor.WriteField("K203_DeleteOrder", "ERPJobNum.", dOrdernum, eRPJobNum)
-                                preactor.WriteField("K203_DeleteOrder", "ERPOprSeq", dOrdernum, eRPOprSeq)
-                                preactor.WriteField("K203_DeleteOrder", "APSOrder No.", dOrdernum, order_No)
-                                preactor.WriteField("K203_DeleteOrder", "APSOprSeq", dOrdernum, eRPOprSeq)
-                                preactor.WriteField("K203_DeleteOrder", "Part No.", dOrdernum, partNo)
-                                preactor.WriteField("K203_DeleteOrder", "Quantity", dOrdernum, quantity)
-                                preactor.Commit("K203_DeleteOrder")
+                                    'Dim dOrdernum As Integer = preactor.CreateRecord("K203_DeleteOrder")
+                                    ''Asign "dragtemp" table to resource and setup start time
+                                    ''preactor.WriteField("K203_DeleteOrders", "RecordId.", dOrdernum, 1)
+                                    'preactor.WriteField("K203_DeleteOrder", "ERPJobNum.", dOrdernum, eRPJobNum)
+                                    'preactor.WriteField("K203_DeleteOrder", "ERPOprSeq", dOrdernum, eRPOprSeq)
+                                    'preactor.WriteField("K203_DeleteOrder", "APSOrder No.", dOrdernum, order_No)
+                                    'preactor.WriteField("K203_DeleteOrder", "APSOprSeq", dOrdernum, eRPOprSeq)
+                                    'preactor.WriteField("K203_DeleteOrder", "Part No.", dOrdernum, partNo)
+                                    'preactor.WriteField("K203_DeleteOrder", "Quantity", dOrdernum, quantity)
+                                    'preactor.Commit("K203_DeleteOrder")
 
-                                Console.WriteLine("After commit the Delete order table. ")
-                                '' To delete the order
-                                preactor.DeleteRecord("Orders", intSelectRecNumber)
-                                preactor.Commit("Orders")
-                                '' MsgBox(" GGGGG ")
-                            End If
+                                    Console.WriteLine("After commit the Delete order table. ")
+                                    '' To delete the order
+                                    preactor.DeleteRecord("Orders", intSelectRecNumber)
+                                    preactor.Commit("Orders")
+                                    '' MsgBox(" GGGGG ")
+                                End If
+                            Catch ex As Exception
+                                MsgBox(ex.Message)
+                            End Try
+
 
                         Next
 
@@ -1076,7 +1071,7 @@ Public Class CustomAction
     End Function
 #End Region
 
-    Public Function GetOrderSerialSeq(ByRef connetionString As String, ByRef strOrderNo As String) As Integer
+    Public Function GetOrderSerialSeq(ByRef connetionString As String, ByRef erpJobNo As String) As Integer
 
         Try
             Dim connection As SqlConnection
@@ -1094,7 +1089,7 @@ Public Class CustomAction
 
             Dim param As SqlParameter
 
-            param = New SqlParameter("@OrderNo", strOrderNo)
+            param = New SqlParameter("@ErpJobNo", erpJobNo)
             param.Direction = ParameterDirection.Input
             param.DbType = DbType.String
             command.Parameters.Add(param)
