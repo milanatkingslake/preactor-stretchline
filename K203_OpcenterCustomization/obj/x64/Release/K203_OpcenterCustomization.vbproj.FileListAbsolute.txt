@@ -166,3 +166,37 @@ C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization
 C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.xml
 C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.pdb
 C:\Source Code\K203 - Strechline\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.vbproj.AssemblyReference.cache
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\K203_OpcenterCustomization.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\K203_OpcenterCustomization.pdb
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\K203_OpcenterCustomization.xml
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\K203_OpcenterCustomization.tlb
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\Preactor.Extensibility.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\Preactor.Extensibility.EventScripts.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\Preactor.Extensibility.Planner.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\Preactor.Interop.EventScripts.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\Preactor.Interop.OpenPlanningBoard.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\Preactor.Interop.PreactorObject.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\cs\Preactor.Extensibility.resources.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\de\Preactor.Extensibility.resources.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\es\Preactor.Extensibility.resources.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\fr\Preactor.Extensibility.resources.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\hu\Preactor.Extensibility.resources.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\it\Preactor.Extensibility.resources.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\ja\Preactor.Extensibility.resources.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\ko\Preactor.Extensibility.resources.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\nl\Preactor.Extensibility.resources.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\pl\Preactor.Extensibility.resources.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\pt\Preactor.Extensibility.resources.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\ru\Preactor.Extensibility.resources.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Release\zh\Preactor.Extensibility.resources.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.vbproj.AssemblyReference.cache
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.K203_JobMerge.resources
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.K203_SpindleAllocation.resources
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.K203_JobSplitDetails.resources
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.Resources.resources
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.vbproj.GenerateResource.cache
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.vbproj.CoreCompileInputs.cache
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.vbproj.CopyComplete
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.dll
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.xml
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.pdb

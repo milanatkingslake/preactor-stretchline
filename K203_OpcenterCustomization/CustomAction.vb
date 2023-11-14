@@ -122,6 +122,7 @@ Public Class CustomAction
                         preactor.WriteField("Orders", "Number", newBlock, newRecordNum)
                         preactor.WriteField("Orders", "Order No.", newBlock, strNewOrderNo)
                         preactor.WriteField("Orders", "Quantity", newBlock, decNewOrderQty)
+                        preactor.WriteField("Orders", "K203_Original_Quantity", newBlock, decNewOrderQty)
 
                         '' Update the Operation sequence - 03-04-2022
                         preactor.WriteField("Orders", "K203_APSOprSeq", newBlock, strSuffix)
@@ -168,6 +169,7 @@ Public Class CustomAction
 
                         '' Update original order quantity (Balance)
                         preactor.WriteField("Orders", "Quantity", RecordNumber, decBalanceOrderQty)
+                        preactor.WriteField("Orders", "K203_Original_Quantity", RecordNumber, decBalanceOrderQty)
 
                         If K203_OrderSerialRecordNumber <= 0 Then
                             '' Create record for K203_OrderSerial
@@ -457,12 +459,12 @@ Public Class CustomAction
                             '' MsgBox("LLL")
                         End If
                         preactor.Commit("Orders")
-                        preactor.Redraw()
-                        '' dblSpindleUsage = pb.GetSecondaryResourceCurrentState(intSecondaryConstraintRecNumber, dtToday).CurrentValue
-                        '' MsgBox(dblSpindleUsage)
-                        '' 22-04-2022
-                        '' Max. Pack Size --> Numerical Attribute 1
-                        Dim intMaxPackSize As Integer = preactor.ReadFieldInt("Orders", "Numerical Attribute 1", RecordNumber)
+                    preactor.Redraw()
+                    '' dblSpindleUsage = pb.GetSecondaryResourceCurrentState(intSecondaryConstraintRecNumber, dtToday).CurrentValue
+                    '' MsgBox(dblSpindleUsage)
+                    '' 22-04-2022
+                    '' Max. Pack Size --> Numerical Attribute 1
+                    Dim intMaxPackSize As Integer = preactor.ReadFieldInt("Orders", "Numerical Attribute 1", RecordNumber)
                         '' No. Of Hrs. Per Doff --> Numerical Attribute 2
                         Dim strNoOfHrsPerDoff As String = preactor.ReadFieldString("Orders", "Numerical Attribute 2", RecordNumber)
                     Dim decNoOfHrsPerDoff As Decimal = CDec(Val("0" & strNoOfHrsPerDoff))
@@ -989,6 +991,7 @@ Public Class CustomAction
                     Dim dblAfterMergeOrderQty As Double = dblOrderQty + dblTotalJobQty
 
                         preactor.WriteField("Orders", "Quantity", RecordNumber, dblAfterMergeOrderQty)
+                        preactor.WriteField("Orders", "K203_Original_Quantity", RecordNumber, dblAfterMergeOrderQty)
                         preactor.WriteField("Orders", "Order Type", RecordNumber, "MERGE")
                         preactor.Commit("Orders")
 
@@ -1084,7 +1087,6 @@ Public Class CustomAction
             command.Connection = connection
             command.CommandType = CommandType.StoredProcedure
             command.CommandText = "K203_GetOrderSerialSeq_Sp"
-            '
             command.CommandTimeout = 600
 
             Dim param As SqlParameter
@@ -1117,6 +1119,24 @@ Public Class CustomAction
         Finally
 
         End Try
+    End Function
+
+    Public Function K203_GetOrderChangeStatus(ByRef preactorComObject As PreactorObj, ByRef pespComObject As Object, ByRef RecordNumber As Integer) As Integer
+
+        Dim preactor As IPreactor = PreactorFactory.CreatePreactorObject(preactorComObject)
+        Dim planningboard As IPlanningBoard = preactor.PlanningBoard
+        ''  Dim isOrderChange As Boolean = planningboard.get(RecordNumber)
+
+        ''Dim orno As String = preactor.ReadFieldString("Orders", "Order No.", pespComObject
+        ''
+        Dim dblOriginal_Quantity As Double = preactor.ReadFieldDouble("Orders", "K203_Original_Quantity", RecordNumber)
+        Dim dblQuantity As Double = preactor.ReadFieldDouble("Orders", "Quantity", RecordNumber)
+        If Not (dblQuantity = dblOriginal_Quantity) Then
+            preactor.WriteField("Orders", "K203_APS_UpdateStatus", RecordNumber, "M")
+            preactor.WriteField("Orders", "K203_Original_Quantity", RecordNumber, dblQuantity)
+        End If
+        ''  MsgBox(isOrderChange)
+        Return 0
     End Function
 
 
