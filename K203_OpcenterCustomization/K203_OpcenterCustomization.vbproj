@@ -105,6 +105,12 @@
     <Compile Include="K203_JobMerge.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="K203_ReduceQuantiyBulk.Designer.vb">
+      <DependentUpon>K203_ReduceQuantiyBulk.vb</DependentUpon>
+    </Compile>
+    <Compile Include="K203_ReduceQuantiyBulk.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="K203_SpindleAllocation.Designer.vb">
       <DependentUpon>K203_SpindleAllocation.vb</DependentUpon>
     </Compile>
@@ -136,6 +142,9 @@
   <ItemGroup>
     <EmbeddedResource Include="K203_JobMerge.resx">
       <DependentUpon>K203_JobMerge.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="K203_ReduceQuantiyBulk.resx">
+      <DependentUpon>K203_ReduceQuantiyBulk.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="K203_SpindleAllocation.resx">
       <DependentUpon>K203_SpindleAllocation.vb</DependentUpon>

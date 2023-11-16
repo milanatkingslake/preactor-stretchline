@@ -23,6 +23,7 @@ D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_O
 D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\bin\Debug\zh\Preactor.Extensibility.resources.dll
 D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\Debug\K203_OpcenterCustomization.vbproj.AssemblyReference.cache
 D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\Debug\K203_OpcenterCustomization.K203_JobMerge.resources
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\Debug\K203_OpcenterCustomization.K203_ReduceQuantiyBulk.resources
 D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\Debug\K203_OpcenterCustomization.K203_SpindleAllocation.resources
 D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\Debug\K203_OpcenterCustomization.K203_JobSplitDetails.resources
 D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\Debug\K203_OpcenterCustomization.Resources.resources

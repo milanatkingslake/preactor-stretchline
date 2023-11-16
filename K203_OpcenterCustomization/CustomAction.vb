@@ -10,6 +10,8 @@ Imports Preactor.Interop.PreactorObject
 <ComVisible(True)>
 <Microsoft.VisualBasic.ComClass("06ab901d-c965-4bbd-8858-ab069b00ce7f", "763a65e6-9cc7-4f82-8045-d84ddf2ff6a6")>
 Public Class CustomAction
+    Public Property tbloReduceQuantiyBulk As DataTable
+
     Public Function Run(ByRef preactorComObject As PreactorObj, ByRef pespComObject As Object) As Integer
 
         Dim preactor As IPreactor = PreactorFactory.CreatePreactorObject(preactorComObject)
@@ -406,37 +408,37 @@ Public Class CustomAction
                 End If
             End If
             Dim StrSpindleStatus As String = preactor.ReadFieldString("Orders", "K203_SpindleStatus", RecordNumber)
-                Dim intRunningSpindleQty As Integer = 0
-                If StrSpindleStatus = "Allocated" Then
-                    intRunningSpindleQty = preactor.ReadFieldInt("Orders", "Constraint Quantity", RecordNumber, 1, 0)
-                End If
+            Dim intRunningSpindleQty As Integer = 0
+            If StrSpindleStatus = "Allocated" Then
+                intRunningSpindleQty = preactor.ReadFieldInt("Orders", "Constraint Quantity", RecordNumber, 1, 0)
+            End If
 
-                '' Define the windows form (K203_SpindleAllocation) 
-                Dim oForm As New K203_SpindleAllocation()
-                oForm.strJobOrderNo = strOrderNo
-                oForm.strAvailableSpindels = intAvailableSpindels.ToString
-                oForm.strRunningSpindleQty = intRunningSpindleQty.ToString
-                oForm.strMaxSpindles = totalSpindle.ToString
+            '' Define the windows form (K203_SpindleAllocation) 
+            Dim oForm As New K203_SpindleAllocation()
+            oForm.strJobOrderNo = strOrderNo
+            oForm.strAvailableSpindels = intAvailableSpindels.ToString
+            oForm.strRunningSpindleQty = intRunningSpindleQty.ToString
+            oForm.strMaxSpindles = totalSpindle.ToString
 
-                '' To open the windows form (K203_SpindleAllocation) 
-                oForm.ShowDialog()
+            '' To open the windows form (K203_SpindleAllocation) 
+            oForm.ShowDialog()
 
-                '' To store spindle allocate quantity
-                Try
-                    If oForm.isOkClick Then
-                        Dim intAllocateSpindleQuantity As Integer = CInt(Int(oForm.AllocateSpindlesTxt.Text))
-                        Dim strSecondaryConstraintAllocated As String = preactor.ReadFieldString("Orders", "Secondary Constraints", RecordNumber, 1, 0)
+            '' To store spindle allocate quantity
+            Try
+                If oForm.isOkClick Then
+                    Dim intAllocateSpindleQuantity As Integer = CInt(Int(oForm.AllocateSpindlesTxt.Text))
+                    Dim strSecondaryConstraintAllocated As String = preactor.ReadFieldString("Orders", "Secondary Constraints", RecordNumber, 1, 0)
 
-                        If strSecondaryConstraintAllocated = "" Then
-                            Dim mydictionary As New Dictionary(Of String, Double)
-                            Dim matdimensions As MatrixDimensions = preactor.MatrixFieldSize("Orders", "Secondary Constraints", RecordNumber)
+                    If strSecondaryConstraintAllocated = "" Then
+                        Dim mydictionary As New Dictionary(Of String, Double)
+                        Dim matdimensions As MatrixDimensions = preactor.MatrixFieldSize("Orders", "Secondary Constraints", RecordNumber)
 
-                            mydictionary.Add(strSecondaryConstraint, intAllocateSpindleQuantity)
+                        mydictionary.Add(strSecondaryConstraint, intAllocateSpindleQuantity)
 
-                            '' +++++++++++++++++++ Writting to data to Matrix field
+                        '' +++++++++++++++++++ Writting to data to Matrix field
 
-                            preactor.SetAutoListSize("Orders", "Secondary Constraints", RecordNumber, mydictionary.Count)
-                            Dim count As Integer = 0
+                        preactor.SetAutoListSize("Orders", "Secondary Constraints", RecordNumber, mydictionary.Count)
+                        Dim count As Integer = 0
                         For Each kvp As KeyValuePair(Of String, Double) In mydictionary
                             count += 1
                             preactor.WriteListField("Orders", "Secondary Constraints", RecordNumber, kvp.Key, count)
@@ -450,23 +452,23 @@ Public Class CustomAction
                         Next
 
                     Else
-                            preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, strSecondaryConstraint, 1, 0)
-                            preactor.WriteMatrixField("Orders", "Constraint Quantity", RecordNumber, intAllocateSpindleQuantity, 1, 0)
+                        preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, strSecondaryConstraint, 1, 0)
+                        preactor.WriteMatrixField("Orders", "Constraint Quantity", RecordNumber, intAllocateSpindleQuantity, 1, 0)
 
-                            '' preactor.Commit("Orders")
-                            '' preactor.Redraw()
-                            '' preactor.ref
-                            '' MsgBox("LLL")
-                        End If
-                        preactor.Commit("Orders")
+                        '' preactor.Commit("Orders")
+                        '' preactor.Redraw()
+                        '' preactor.ref
+                        '' MsgBox("LLL")
+                    End If
+                    preactor.Commit("Orders")
                     preactor.Redraw()
                     '' dblSpindleUsage = pb.GetSecondaryResourceCurrentState(intSecondaryConstraintRecNumber, dtToday).CurrentValue
                     '' MsgBox(dblSpindleUsage)
                     '' 22-04-2022
                     '' Max. Pack Size --> Numerical Attribute 1
                     Dim intMaxPackSize As Integer = preactor.ReadFieldInt("Orders", "Numerical Attribute 1", RecordNumber)
-                        '' No. Of Hrs. Per Doff --> Numerical Attribute 2
-                        Dim strNoOfHrsPerDoff As String = preactor.ReadFieldString("Orders", "Numerical Attribute 2", RecordNumber)
+                    '' No. Of Hrs. Per Doff --> Numerical Attribute 2
+                    Dim strNoOfHrsPerDoff As String = preactor.ReadFieldString("Orders", "Numerical Attribute 2", RecordNumber)
                     Dim decNoOfHrsPerDoff As Decimal = CDec(Val("0" & strNoOfHrsPerDoff))
                     ''Milan Amarasooriya 20220804 befor
                     ''Dim strSetupTime As String = preactor.ReadFieldString("Orders", "Setup Time", RecordNumber)
@@ -475,72 +477,72 @@ Public Class CustomAction
                     '' To find the Hours
                     Dim intHIndex As Integer = strSetupTime.IndexOf("H")
                     Dim strHours = strSetupTime.Substring(0, intHIndex)
-                        Dim decHours As Decimal = CDec(Val("0" & strHours))
+                    Dim decHours As Decimal = CDec(Val("0" & strHours))
 
-                        ''To find the minutes
-                        Dim intMIndex As Integer = strSetupTime.IndexOf("M")
-                        Dim strMinutes = strSetupTime.Substring(intMIndex - 3, intHIndex)
-                        Dim decMinutes As Decimal = CDec(Val("0" & strMinutes))
-                        Dim decSetupTime = decHours + decMinutes / 60
-                        Dim decOpStandard As Decimal = (intMaxPackSize) / (decNoOfHrsPerDoff + decSetupTime)
+                    ''To find the minutes
+                    Dim intMIndex As Integer = strSetupTime.IndexOf("M")
+                    Dim strMinutes = strSetupTime.Substring(intMIndex - 3, intHIndex)
+                    Dim decMinutes As Decimal = CDec(Val("0" & strMinutes))
+                    Dim decSetupTime = decHours + decMinutes / 60
+                    Dim decOpStandard As Decimal = (intMaxPackSize) / (decNoOfHrsPerDoff + decSetupTime)
                     ''Milan Amarasooriya 20220804 
                     If decSetupTime = 0 Then
                         MsgBox("Scheduled without Doff Setup time",, "Information")
                     End If
                     Dim strPartNo As String = preactor.ReadFieldString("Orders", "Part No.", RecordNumber)
 
-                        Dim intOPNo As Integer = preactor.ReadFieldInt("Orders", "Op. No.", RecordNumber)
+                    Dim intOPNo As Integer = preactor.ReadFieldInt("Orders", "Op. No.", RecordNumber)
 
-                        '' To get the Quantity Per Hour
-                        '' 21-05-2022 - Dim decQuantityPerHour As Decimal = GetQuantityPerHour(connetionString, strPartNo, intOPNo)  
-                        '' 21-05-22
-                        Dim strQuantityPerHour As String = preactor.ReadFieldString("Orders", "K203_ProdstandardPerSpindle", RecordNumber)
-                        Dim decQuantityPerHour As Decimal = CDec(Val("0" & strQuantityPerHour))
+                    '' To get the Quantity Per Hour
+                    '' 21-05-2022 - Dim decQuantityPerHour As Decimal = GetQuantityPerHour(connetionString, strPartNo, intOPNo)  
+                    '' 21-05-22
+                    Dim strQuantityPerHour As String = preactor.ReadFieldString("Orders", "K203_ProdstandardPerSpindle", RecordNumber)
+                    Dim decQuantityPerHour As Decimal = CDec(Val("0" & strQuantityPerHour))
 
-                        '' MsgBox("decQuantityPerHour " & decQuantityPerHour)
+                    '' MsgBox("decQuantityPerHour " & decQuantityPerHour)
 
 
-                        ''29-04-2022
-                        ''"Prodstandard per Spindle" is equal to "intQuantityPerHour"
-                        Dim decProdstandardPerSpindle As Decimal = decQuantityPerHour
+                    ''29-04-2022
+                    ''"Prodstandard per Spindle" is equal to "intQuantityPerHour"
+                    Dim decProdstandardPerSpindle As Decimal = decQuantityPerHour
 
-                        If intAllocateSpindleQuantity > 0 Then
-                            preactor.WriteField("Orders", "K203_AllocatedSpindles", RecordNumber, intAllocateSpindleQuantity)
+                    If intAllocateSpindleQuantity > 0 Then
+                        preactor.WriteField("Orders", "K203_AllocatedSpindles", RecordNumber, intAllocateSpindleQuantity)
 
-                            ''29-04-2022 - Writting the Doff Qty ("Doff Qty" is equal to "Transfer Quantity") 
-                            '' 21-05-2022 - preactor.WriteField("Orders", "K203_ProdstandardPerSpindle", RecordNumber, decQuantityPerHour)
-                            Dim decDoffQty As Decimal = intAllocateSpindleQuantity * decProdstandardPerSpindle * decNoOfHrsPerDoff
-                            preactor.WriteField("Orders", "Transfer Quantity", RecordNumber, decDoffQty)
-                            Dim decQtyPerHourForSpindles As Decimal = (intAllocateSpindleQuantity * decProdstandardPerSpindle * decNoOfHrsPerDoff) / (decNoOfHrsPerDoff + decSetupTime)
+                        ''29-04-2022 - Writting the Doff Qty ("Doff Qty" is equal to "Transfer Quantity") 
+                        '' 21-05-2022 - preactor.WriteField("Orders", "K203_ProdstandardPerSpindle", RecordNumber, decQuantityPerHour)
+                        Dim decDoffQty As Decimal = intAllocateSpindleQuantity * decProdstandardPerSpindle * decNoOfHrsPerDoff
+                        preactor.WriteField("Orders", "Transfer Quantity", RecordNumber, decDoffQty)
+                        Dim decQtyPerHourForSpindles As Decimal = (intAllocateSpindleQuantity * decProdstandardPerSpindle * decNoOfHrsPerDoff) / (decNoOfHrsPerDoff + decSetupTime)
 
-                            '' MsgBox("AAA decQtyPerHourForSpindles " & decQtyPerHourForSpindles)
+                        '' MsgBox("AAA decQtyPerHourForSpindles " & decQtyPerHourForSpindles)
 
-                            preactor.WriteField("Orders", "Quantity per Hour", RecordNumber, decQtyPerHourForSpindles)
-                            preactor.WriteField("Orders", "K203_SpindleStatus", RecordNumber, "Allocated")
-                        Else
-                            preactor.WriteField("Orders", "K203_AllocatedSpindles", RecordNumber, 0)
-                            preactor.WriteField("Orders", "Quantity per Hour", RecordNumber, decQuantityPerHour)
-                            preactor.WriteField("Orders", "K203_SpindleStatus", RecordNumber, "Not Allocated")
-                        End If
-
-                        '' MsgBox("AAA")
-                        preactor.Commit("Orders")
-                        preactor.Redraw()
-                        MsgBox("Successfully completed")
-
-                        '' dblSpindleUsage = pb.GetSecondaryResourceCurrentState(intSecondaryConstraintRecNumber, dtToday).CurrentValue
-                        '' MsgBox("dblSpindleUsage " & dblSpindleUsage)
-
+                        preactor.WriteField("Orders", "Quantity per Hour", RecordNumber, decQtyPerHourForSpindles)
+                        preactor.WriteField("Orders", "K203_SpindleStatus", RecordNumber, "Allocated")
+                    Else
+                        preactor.WriteField("Orders", "K203_AllocatedSpindles", RecordNumber, 0)
+                        preactor.WriteField("Orders", "Quantity per Hour", RecordNumber, decQuantityPerHour)
+                        preactor.WriteField("Orders", "K203_SpindleStatus", RecordNumber, "Not Allocated")
                     End If
-                Catch ex As Exception
-                    MsgBox(ex.Message)
-                End Try
 
-                '' preactor.Commit("Orders")
-                '' preactor.Redraw()
+                    '' MsgBox("AAA")
+                    preactor.Commit("Orders")
+                    preactor.Redraw()
+                    MsgBox("Successfully completed")
 
-            Else
-                MsgBox("Job not schedule")
+                    '' dblSpindleUsage = pb.GetSecondaryResourceCurrentState(intSecondaryConstraintRecNumber, dtToday).CurrentValue
+                    '' MsgBox("dblSpindleUsage " & dblSpindleUsage)
+
+                End If
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
+
+            '' preactor.Commit("Orders")
+            '' preactor.Redraw()
+
+        Else
+            MsgBox("Job not schedule")
         End If
 
         '' preactor.Commit("Orders")
@@ -959,36 +961,36 @@ Public Class CustomAction
             Loop While x <= intMaxRecordNo
 
             If y > 0 Then
-            Dim oForm As New K203_JobMerge()
+                Dim oForm As New K203_JobMerge()
 
                 '' preactor.Commit("dtJobMerge_s")
                 oForm.dblTotAssignedSpindle = dblTotalAssignedSpindles
-            oForm.tblJobMerge = dtJobMerge_s
-            oForm.strJobOrderNo = strOrderNo
-            oForm.dblJobOrderQty = dblOrderQty
-            oForm.isOkClick = False
+                oForm.tblJobMerge = dtJobMerge_s
+                oForm.strJobOrderNo = strOrderNo
+                oForm.dblJobOrderQty = dblOrderQty
+                oForm.isOkClick = False
 
-            ''show popup screen
-            oForm.ShowDialog()
+                ''show popup screen
+                oForm.ShowDialog()
 
                 Dim tbl_JobMerge As DataTable
                 Dim dblTotalJobQty As Double = 0
-            Dim strJobQty As String = ""
+                Dim strJobQty As String = ""
 
-            If oForm.isOkClick = True Then
-                If Not oForm.tblJobMerge Is Nothing Then
-                    tbl_JobMerge = oForm.tblJobMerge
+                If oForm.isOkClick = True Then
+                    If Not oForm.tblJobMerge Is Nothing Then
+                        tbl_JobMerge = oForm.tblJobMerge
 
-                    Dim intSelectRecNumber As Integer
-                    For Each tbl_JobMergeRow As DataRow In tbl_JobMerge.Rows
-                        '' strJobQty = tbl_JobMergeRow("Job Quantity").ToString
-                        '' MsgBox("strJobQty A " & strJobQty)
-                        If tbl_JobMergeRow("Check").ToString() = "True" Then
-                            dblTotalJobQty = dblTotalJobQty + CDbl(tbl_JobMergeRow("Job Quantity").ToString())
-                        End If
+                        Dim intSelectRecNumber As Integer
+                        For Each tbl_JobMergeRow As DataRow In tbl_JobMerge.Rows
+                            '' strJobQty = tbl_JobMergeRow("Job Quantity").ToString
+                            '' MsgBox("strJobQty A " & strJobQty)
+                            If tbl_JobMergeRow("Check").ToString() = "True" Then
+                                dblTotalJobQty = dblTotalJobQty + CDbl(tbl_JobMergeRow("Job Quantity").ToString())
+                            End If
 
-                    Next
-                    Dim dblAfterMergeOrderQty As Double = dblOrderQty + dblTotalJobQty
+                        Next
+                        Dim dblAfterMergeOrderQty As Double = dblOrderQty + dblTotalJobQty
 
                         preactor.WriteField("Orders", "Quantity", RecordNumber, dblAfterMergeOrderQty)
                         preactor.WriteField("Orders", "K203_Original_Quantity", RecordNumber, dblAfterMergeOrderQty)
@@ -1039,15 +1041,15 @@ Public Class CustomAction
                         Next
 
                         preactor.Commit("Orders")
-                    '' preactor.Redraw()
+                        '' preactor.Redraw()
 
-                    MsgBox("Successfuly Completed")
+                        MsgBox("Successfuly Completed")
 
+                    End If
                 End If
+            Else
+                MsgBox("No jobs for merging")
             End If
-        Else
-            MsgBox("No jobs for merging")
-        End If
 
 
         End If
@@ -1139,5 +1141,96 @@ Public Class CustomAction
         Return 0
     End Function
 
+    Public Function K203_ReduceQuantityBulk(ByRef preactorComObject As PreactorObj, ByRef pespComObject As Object, ByRef RecordNumber As Integer) As Integer
+
+        Dim preactor As IPreactor = PreactorFactory.CreatePreactorObject(preactorComObject)
+        Dim planningboard As IPlanningBoard = preactor.PlanningBoard
+        Dim connetionString As String = preactor.ParseShellString("{DB CONNECT STRING}")
+
+        Dim strERPJobNum As String = preactor.ReadFieldString("Orders", "K203_ERPJobNum.", RecordNumber)
+        Dim strOrderNo As String = preactor.ReadFieldString("Orders", "Order No.", RecordNumber)
+        Dim decReducedQuantityMain As Double = preactor.ReadFieldDouble("Orders", "Numerical Attribute 3", RecordNumber)
+
+
+        Dim tbl_ReduceQuantiy As DataTable = New DataTable()
+        Dim rowId As DataColumn = New DataColumn("ID", Type.[GetType]("System.Double"))
+        tbl_ReduceQuantiy.Columns.Add(rowId)
+        Dim sOrderNo As DataColumn = New DataColumn("OrderNo", Type.[GetType]("System.String"))
+        tbl_ReduceQuantiy.Columns.Add(sOrderNo)
+        Dim sOrderQuantity As DataColumn = New DataColumn("OrderQuantity", Type.[GetType]("System.Double"))
+        tbl_ReduceQuantiy.Columns.Add(sOrderQuantity)
+        Dim sReducedMainQuantity As DataColumn = New DataColumn("ReducedMainQuantity", Type.[GetType]("System.Double"))
+        tbl_ReduceQuantiy.Columns.Add(sReducedMainQuantity)
+        Dim sReducedQuantity As DataColumn = New DataColumn("ReducedQuantity", Type.[GetType]("System.Double"))
+        tbl_ReduceQuantiy.Columns.Add(sReducedQuantity)
+        Dim sFinalQuantity As DataColumn = New DataColumn("FinalQuantity", Type.[GetType]("System.Double"))
+        tbl_ReduceQuantiy.Columns.Add(sFinalQuantity)
+
+        Dim strERPJobNumTemp As String
+        Dim strOrderNoTemp As String
+        Dim strQuantityTemp As Double
+        Dim strReducedMainQuantityTemp As Double
+        Dim strReducedQuantityTemp As Double
+        Dim strFinalQuantityTemp As Double
+
+        Dim orderCount As Integer = preactor.RecordCount("Orders")
+        Dim x As Integer = 1
+        Dim id As Integer = 0
+
+        Do
+            strERPJobNumTemp = preactor.ReadFieldString("Orders", "K203_ERPJobNum.", x)
+
+            If (strERPJobNum = strERPJobNumTemp) Then
+                strOrderNoTemp = preactor.ReadFieldString("Orders", "Order No.", x)
+                strQuantityTemp = preactor.ReadFieldDouble("Orders", "Quantity", x)
+                strReducedMainQuantityTemp = preactor.ReadFieldDouble("Orders", "Numerical Attribute 3", x)
+                strFinalQuantityTemp = preactor.ReadFieldDouble("Orders", "Quantity", x)
+                id = id + 1
+                strReducedQuantityTemp = 0
+                tbl_ReduceQuantiy.Rows.Add(id, strOrderNoTemp, strQuantityTemp, strReducedMainQuantityTemp, strReducedQuantityTemp, strFinalQuantityTemp)
+            End If
+
+            x = x + 1
+        Loop While x <= orderCount
+
+        Dim oReduceQuantiyBulk As New K203_ReduceQuantiyBulk()
+        oReduceQuantiyBulk.strConnectionCon = connetionString
+        oReduceQuantiyBulk.strERPJobNum = strERPJobNum
+        oReduceQuantiyBulk.decReduceQuantiyMain = decReducedQuantityMain
+        oReduceQuantiyBulk.tblReduceQuantiy = tbl_ReduceQuantiy
+
+        oReduceQuantiyBulk.ShowDialog()
+        tbloReduceQuantiyBulk = oReduceQuantiyBulk.tblReduceQuantiy_Calculated
+
+
+        Dim orderNo As String
+        Dim reducedQuantity As Double
+        Dim order_Num As Integer = 0
+        Dim order_Quantity As Double = 0
+
+        Try
+            If Not ((tbloReduceQuantiyBulk Is DBNull.Value) Or (tbloReduceQuantiyBulk Is Nothing)) Then
+                For Each rqbrow As DataRow In tbloReduceQuantiyBulk.Rows
+                    orderNo = rqbrow("OrderNo").ToString()
+                    reducedQuantity = CDbl(rqbrow("ReducedQuantity").ToString())
+
+                    order_Num = preactor.FindMatchingRecord("Orders", "Order No.", order_Num, orderNo)
+                    order_Quantity = preactor.ReadFieldDouble("Orders", "Quantity", order_Num)
+
+                    If order_Num > 0 Then
+                        preactor.WriteField("Orders", "K203_Order_Reduced_Qty", order_Num, reducedQuantity)
+                        preactor.WriteField("Orders", "Quantity", order_Num, (order_Quantity - reducedQuantity))
+                    End If
+                    order_Num = preactor.FindMatchingRecord("Orders", "Order No.", order_Num, orderNo)
+
+                Next
+                preactor.Commit("Orders")
+            End If
+
+        Catch ex As Exception
+
+        End Try
+            Return 0
+    End Function
 
 End Class
