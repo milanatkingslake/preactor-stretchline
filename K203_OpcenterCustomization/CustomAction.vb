@@ -770,13 +770,17 @@ Public Class CustomAction
                 End If
             End If
         Else '' 04-02-2022 - Removing from planing board
+            Try
+                Dim strQuantityPerHour As String = preactor.ReadFieldString("Orders", "K203_ProdstandardPerSpindle", RecordNumber)
+                Dim decQuantityPerHour As Decimal = CDec(Val("0" & strQuantityPerHour))
+                preactor.WriteField("Orders", "Quantity per Hour", RecordNumber, decQuantityPerHour)
+                preactor.WriteField("Orders", "K203_AllocatedSpindles", RecordNumber, 0)
+                preactor.WriteField("Orders", "K203_SpindleStatus", RecordNumber, "Not Allocated")
+                preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, -1, 1, 0)
 
-            preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, -1, 1, 0)
-            Dim strQuantityPerHour As String = preactor.ReadFieldString("Orders", "K203_ProdstandardPerSpindle", RecordNumber)
-            Dim decQuantityPerHour As Decimal = CDec(Val("0" & strQuantityPerHour))
-            preactor.WriteField("Orders", "Quantity per Hour", RecordNumber, decQuantityPerHour)
-            preactor.WriteField("Orders", "K203_AllocatedSpindles", RecordNumber, 0)
-            preactor.WriteField("Orders", "K203_SpindleStatus", RecordNumber, "Not Allocated")
+            Catch ex As Exception
+                MsgBox("Error Found when Grag and drop " + ex.Message,, "Error")
+            End Try
 
         End If
 
