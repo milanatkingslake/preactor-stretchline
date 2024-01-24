@@ -4,12 +4,15 @@ Option Explicit On
 Imports System
 Imports System.Data.SqlClient
 Imports System.Runtime.InteropServices
+Imports System.Threading.Tasks
 Imports Preactor
 Imports Preactor.Interop.PreactorObject
 
 <ComVisible(True)>
 <Microsoft.VisualBasic.ComClass("06ab901d-c965-4bbd-8858-ab069b00ce7f", "763a65e6-9cc7-4f82-8045-d84ddf2ff6a6")>
 Public Class CustomAction
+    Dim progressBarWindow As ProgressBarWindow = New ProgressBarWindow()
+
     Public Property tbloReduceQuantiyBulk As DataTable
 
     Public Function Run(ByRef preactorComObject As PreactorObj, ByRef pespComObject As Object) As Integer
@@ -776,7 +779,9 @@ Public Class CustomAction
                 preactor.WriteField("Orders", "Quantity per Hour", RecordNumber, decQuantityPerHour)
                 preactor.WriteField("Orders", "K203_AllocatedSpindles", RecordNumber, 0)
                 preactor.WriteField("Orders", "K203_SpindleStatus", RecordNumber, "Not Allocated")
-                preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, -1, 1, 0)
+                preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, 0, 1, 0)
+                ''preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, -1, 1, 0)
+
 
             Catch ex As Exception
                 MsgBox("Error Found when Grag and drop " + ex.Message,, "Error")
@@ -1234,7 +1239,25 @@ Public Class CustomAction
         Catch ex As Exception
 
         End Try
-            Return 0
+        Return 0
+    End Function
+    Public Async Function ShowProgressBar(maxProgresslenght As Integer) As Task
+        ' Use Task.Run to execute the creation and showing of the new form on a background thread
+        Await Task.Run(Sub()
+                           progressBarWindow.maxProgress = maxProgresslenght
+                           progressBarWindow.ShowDialog()
+                       End Sub)
+    End Function
+    Private Async Sub CallProgressWindow(maxProgresslenght As Integer)
+        Await ShowProgressBar(maxProgresslenght)
+    End Sub
+    Public Function K203_ShowProgressBar(ByRef preactorComObject As PreactorObj, ByRef pespComObject As Object) As Integer
+        CallProgressWindow(10)
+        Return 0
     End Function
 
+    Public Function K203_ClosedProgressBar(ByRef preactorComObject As PreactorObj, ByRef pespComObject As Object) As Integer
+        progressBarWindow.Hide()
+        Return 0
+    End Function
 End Class
