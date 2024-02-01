@@ -158,7 +158,11 @@ Public Class CustomAction
                             '' 23-05-2022 preactor.WriteMatrixField("Orders", "Constraint Quantity", newBlock, 0, 1, 0)
                             '' 21-05-2022
                             '' 23-05-2022 preactor.WriteMatrixField("Orders", "Secondary Constraints", newBlock, "", 1, 0)
-                            preactor.WriteMatrixField("Orders", "Secondary Constraints", newBlock, -1, 1, 0)
+                            Try
+                                preactor.WriteMatrixField("Orders", "Secondary Constraints", newBlock, -1, 1, 0)
+                            Catch ex As Exception
+
+                            End Try
                         End If
 
                         ' To get the Quantity Per Hour - 04-04-2022
@@ -455,8 +459,12 @@ Public Class CustomAction
                         Next
 
                     Else
-                        preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, strSecondaryConstraint, 1, 0)
-                        preactor.WriteMatrixField("Orders", "Constraint Quantity", RecordNumber, intAllocateSpindleQuantity, 1, 0)
+                        Try
+                            preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, strSecondaryConstraint, 1, 0)
+                            preactor.WriteMatrixField("Orders", "Constraint Quantity", RecordNumber, intAllocateSpindleQuantity, 1, 0)
+                        Catch ex As Exception
+
+                        End Try
 
                         '' preactor.Commit("Orders")
                         '' preactor.Redraw()
@@ -759,14 +767,22 @@ Public Class CustomAction
                 If strOldResource <> strCurrentResource Then
 
                     If strOldSecondaryConstraint <> "Unspecified" And strOldSecondaryConstraint <> "" Then
-                        preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, -1, 1, 0)
+                        Try
+                            preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, -1, 1, 0)
+                        Catch ex As Exception
+
+                        End Try
                     End If
 
                 End If
 
             Else
                 If strOldResource <> strCurrentResource Then  '' 02-06-2022 Resources change in planing board
-                    preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, -1, 1, 0)
+                    Try
+                        preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, -1, 1, 0)
+                    Catch ex As Exception
+
+                    End Try
                     preactor.WriteField("Orders", "Quantity per Hour", RecordNumber, decQtyPerHourForSpindles)
                     preactor.WriteField("Orders", "K203_AllocatedSpindles", RecordNumber, 0)
                     preactor.WriteField("Orders", "K203_SpindleStatus", RecordNumber, "Not Allocated")
@@ -779,8 +795,13 @@ Public Class CustomAction
                 preactor.WriteField("Orders", "Quantity per Hour", RecordNumber, decQuantityPerHour)
                 preactor.WriteField("Orders", "K203_AllocatedSpindles", RecordNumber, 0)
                 preactor.WriteField("Orders", "K203_SpindleStatus", RecordNumber, "Not Allocated")
-                preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, 0, 1, 0)
-                ''preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, -1, 1, 0)
+                Try
+                    ''preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, 0, 1, 0)
+                    preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber, -1, 1, 0)
+                Catch ex As Exception
+
+                End Try
+
 
 
             Catch ex As Exception
@@ -817,7 +838,11 @@ Public Class CustomAction
 
                     Dim secodryconstrain As String = preactor.ReadFieldString("Orders", "Secondary Constraints", RecordNumber_, 1, 0)
                     If Not (secodryconstrain = "") Then
-                        preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber_, -1, 1, 0)
+                        Try
+                            preactor.WriteMatrixField("Orders", "Secondary Constraints", RecordNumber_, -1, 1, 0)
+                        Catch ex As Exception
+
+                        End Try
                     End If
 
                     Dim strQuantityPerHour As String = preactor.ReadFieldString("Orders", "K203_ProdstandardPerSpindle", RecordNumber_)
