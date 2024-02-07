@@ -109,7 +109,7 @@ Public Class K203_ReduceQuantiyBulk
     Function validateReduction() As Boolean
         Dim mainReductionQuantity = decReduceQuantiyMain.ToString
         Dim iRowCnt As Integer = 0
-        Dim dr As Data.DataRow
+        ''Dim dr As Data.DataRow
         Dim reductionQty As Decimal = 0
 
         For Each GridViewRow In DataGridViewReduceQuantity.Rows

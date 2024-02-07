@@ -743,6 +743,11 @@ Public Class CustomAction
             '' 15-06-2022 - Dim decQtyPerHourForSpindles As Decimal = (intTotalSpindle * decProdstandardPerSpindle * decNoOfHrsPerDoff) / (decNoOfHrsPerDoff + decSetupTime)
 
             '' 15-06-2022 - Start
+            '' Validation added by Milan Amarasooriaya 20240202
+            If (decNoOfHrsPerDoff + decSetupTime) = 0 Then
+                MsgBox("No of Hrs per Doff is not define ",, "Information")
+                Return 0
+            End If
             Dim decQtyPerHourForSpindles As Double = (totalSpindle * decProdstandardPerSpindle * decNoOfHrsPerDoff) / (decNoOfHrsPerDoff + decSetupTime)
             '' 15-06-2022 - End
 
@@ -1266,23 +1271,66 @@ Public Class CustomAction
         End Try
         Return 0
     End Function
-    Public Async Function ShowProgressBar(maxProgresslenght As Integer) As Task
-        ' Use Task.Run to execute the creation and showing of the new form on a background thread
-        Await Task.Run(Sub()
-                           progressBarWindow.maxProgress = maxProgresslenght
-                           progressBarWindow.ShowDialog()
-                       End Sub)
-    End Function
-    Private Async Sub CallProgressWindow(maxProgresslenght As Integer)
-        Await ShowProgressBar(maxProgresslenght)
-    End Sub
-    Public Function K203_ShowProgressBar(ByRef preactorComObject As PreactorObj, ByRef pespComObject As Object) As Integer
-        CallProgressWindow(10)
+
+    ''Old Code
+    'Public Function K203_ShowProgressBar(ByRef preactorComObject As PreactorObj, ByRef pespComObject As Object, ByRef maxlength As Integer) As Integer
+    '    CallProgressWindow(maxlength)
+    '    ''Form1_Load()
+    '    Return 0
+    'End Function
+    'Private Async Sub CallProgressWindow(maxProgresslength As Integer)
+    '    Await ShowProgressBar(maxProgresslength)
+    'End Sub
+    'Public Async Function ShowProgressBar(maxProgresslength As Integer) As Task
+    '    ' Use Task.Run to execute the creation and showing of the new form on a background thread
+    '    Await Task.Run(Sub()
+    '                       progressBarWindow.maxProgress = maxProgresslength
+    '                       progressBarWindow.BringToFront()
+    '                       progressBarWindow.ShowDialog()
+    '                   End Sub)
+    '    progressBarWindow.Close()
+    'End Function
+    'Public Function K203_ClosedProgressBar(ByRef preactorComObject As PreactorObj, ByRef pespComObject As Object) As Integer
+    '    progressBarWindow.Close()
+    '    Return 0
+    'End Function
+
+    ''Old Code
+
+    Public Function K203_ShowProgressBar(ByRef preactorComObject As PreactorObj, ByRef pespComObject As Object, ByRef maxlength As Integer) As Integer
+        CallProgressWindow(maxlength)
         Return 0
     End Function
 
     Public Function K203_ClosedProgressBar(ByRef preactorComObject As PreactorObj, ByRef pespComObject As Object) As Integer
-        progressBarWindow.Hide()
+        progressBarWindow.Close()
         Return 0
     End Function
+
+
+
+
+    Private Async Sub CallProgressWindow(maxProgresslength As Integer)
+        ' Call your method to show the progress bar asynchronously
+        Await ShowProgressBar(maxProgresslength)
+    End Sub
+
+    Public Async Function ShowProgressBar(maxProgresslength As Integer) As Task
+        Dim progressBarWindow As New ProgressBarWindow()
+        progressBarWindow.maxProgress = maxProgresslength
+
+        ' Show the progress bar window
+        progressBarWindow.BringToFront()
+        progressBarWindow.Show()
+
+        ' Simulate some work
+        Await Task.Delay(maxProgresslength * 1000) ' delay, replace with your actual task
+
+        ' Close the progress bar window
+        progressBarWindow.Close()
+
+        ' Display a message box
+        MsgBox("Process has completed!",, "Information")
+    End Function
+
 End Class
