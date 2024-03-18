@@ -202,3 +202,4 @@ D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_O
 D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.pdb
 D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.K203_ReduceQuantiyBulk.resources
 D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.ProgressBarWindow.resources
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Release\K203_OpcenterCustomization.K203_MultipleOrdersDragAndDrop.resources

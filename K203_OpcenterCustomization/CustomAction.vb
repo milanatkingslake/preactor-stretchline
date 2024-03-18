@@ -5,6 +5,7 @@ Imports System
 Imports System.Data.SqlClient
 Imports System.Runtime.InteropServices
 Imports System.Threading.Tasks
+Imports K203_OpcenterCustomization.My
 Imports Preactor
 Imports Preactor.Interop.PreactorObject
 
@@ -1332,5 +1333,139 @@ Public Class CustomAction
         ' Display a message box
         MsgBox("Process has completed!",, "Information")
     End Function
+    Public Function BatchScheduling(ByRef preactorComObject As PreactorObj, ByRef pespComObject As Object, ByRef RecordNumber As Integer) As Integer
 
+        Dim preactor As IPreactor = PreactorFactory.CreatePreactorObject(preactorComObject)
+        Dim planningboard As IPlanningBoard = preactor.PlanningBoard
+        Dim connetionString As String = preactor.ParseShellString("{DB CONNECT STRING}")
+        Dim strOrderNo_main As String = preactor.ReadFieldString("Orders", "Order No.", RecordNumber)
+        Dim dubQuantity_main As Double = preactor.ReadFieldDouble("Orders", "Quantity", RecordNumber)
+        Dim strResourceGroup_main As String = preactor.ReadFieldString("Orders", "Resource Group", RecordNumber)
+        Dim strResource_main As String = preactor.ReadFieldString("Orders", "Resource", RecordNumber)
+        Dim resourceRecordNum As Integer = preactor.FindMatchingRecord("Resources", "Name", resourceRecordNum, strResource_main)
+        Dim strSimilerPartNo_main As String = preactor.ReadFieldString("Orders", "String Attribute 3", resourceRecordNum)
+        Dim dtDueDate As Date = preactor.ReadFieldDateTime("Orders", "Due Date", resourceRecordNum)
+
+
+        Dim dtStartTime As Date = preactor.ReadFieldDateTime("Orders", "Start Time", RecordNumber)
+        ''Dim dtEndTime As Date = preactor.ReadFieldDateTime("Orders", "End Time", RecordNumber)
+
+        Dim intK203_ResourceSecondaryConstraintRecNumber As Integer = preactor.FindMatchingRecord("K203_ResourceSecondaryConstraint", "Resources", intK203_ResourceSecondaryConstraintRecNumber, strResource_main)
+
+        If intK203_ResourceSecondaryConstraintRecNumber <= 0 Then
+            MsgBox("No relevant record in K203_ResourceSecondaryConstraint table")
+            Exit Function
+        End If
+        Dim strSecondaryConstraint As String = preactor.ReadFieldString("K203_ResourceSecondaryConstraint", "Secondary Constraints", intK203_ResourceSecondaryConstraintRecNumber)
+        Dim intSecondaryConstraintRecNumber As Integer = preactor.FindMatchingRecord("Secondary Constraints", "Name", intSecondaryConstraintRecNumber, strSecondaryConstraint)
+
+        Dim maxSpindle As Integer = GetMaxSpindle(connetionString, intSecondaryConstraintRecNumber, dtStartTime)
+
+
+        Dim dtJob_s As DataTable = New DataTable()
+        Dim c_Id_s As DataColumn = New DataColumn("Id", Type.[GetType]("System.Double"))
+        Dim c_OrderNo_s As DataColumn = New DataColumn("OrderNo", Type.[GetType]("System.String"))
+        Dim c_SimilerPartNo_s As DataColumn = New DataColumn("SimilerPartNo", Type.[GetType]("System.String"))
+        Dim c_Quantity_s As DataColumn = New DataColumn("Quantity", Type.[GetType]("System.String"))
+        Dim c_Resource_s As DataColumn = New DataColumn("Resource", Type.[GetType]("System.String"))
+        Dim c_StartTime_s As DataColumn = New DataColumn("StartTime", Type.[GetType]("System.DateTime"))
+        Dim c_DueDate_s As DataColumn = New DataColumn("DueDate", Type.[GetType]("System.String"))
+
+
+
+        dtJob_s.Columns.Add(c_Id_s)
+        dtJob_s.Columns.Add(c_OrderNo_s)
+        dtJob_s.Columns.Add(c_SimilerPartNo_s)
+        dtJob_s.Columns.Add(c_Quantity_s)
+        dtJob_s.Columns.Add(c_Resource_s)
+        dtJob_s.Columns.Add(c_StartTime_s)
+        dtJob_s.Columns.Add(c_DueDate_s)
+
+
+
+        Dim num As Integer = preactor.RecordCount("Orders")
+        Dim i As Integer = 1
+        Do
+            Dim strStartTime As String = preactor.ReadFieldString("Orders", "Start Time", i)
+            Dim strResourceGroup As String = preactor.ReadFieldString("Orders", "Resource Group", i)
+
+            If strStartTime = "Unspecified" And strResourceGroup_main = strResourceGroup Then
+                Dim newOrderNmb As String = preactor.ReadFieldString("Orders", "Order No.", i)
+                Dim strSimilerPartNo As String = preactor.ReadFieldString("Orders", "String Attribute 3", i)
+                Dim dubQuantity As Double = preactor.ReadFieldDouble("Orders", "Quantity", i)
+                Dim datDueDate As DateTime = preactor.ReadFieldDateTime("Orders", "Due Date", i)
+
+
+                dtJob_s.Rows.Add(i, newOrderNmb, strSimilerPartNo, dubQuantity, strResource_main, dtStartTime, datDueDate)
+            End If
+            i = i + 1
+        Loop While i <= num
+
+
+        Dim oForm As New K203_MultipleOrdersDragAndDrop()
+        oForm.tblOrders = dtJob_s
+
+        oForm.strOrderNo = strOrderNo_main
+        oForm.strResource = strResource_main
+
+        oForm.strSimilerPartNo = strSimilerPartNo_main
+        oForm.dbQuantity = dubQuantity_main
+        oForm.dtStartTime = dtStartTime
+        oForm.dtDueDate = dtDueDate
+
+
+        Dim dtSelectedJob As DataTable = New DataTable()
+
+        oForm.ShowDialog()
+        Dim dtJobSelect As DataTable = oForm.dtSelectedJob
+        Dim strNotSchedulejobs As String
+        'dtJob_s.Rows.Add(1, "017055-1-1#600")
+        'dtJob_s.Rows.Add(2, "017055-1-2#600")
+        'dtJob_s.Rows.Add(3, "017055-2-1#600")
+        'dtJob_s.Rows.Add(4, "017055-2-2#600")
+        If Not dtJobSelect Is Nothing Then
+
+            For Each dtJob_sRow As DataRow In dtJobSelect.Rows
+
+                Try
+                    Dim operationTimes As Nullable(Of Preactor.OperationTimes)
+
+                    Dim operationRecord As Integer = preactor.FindMatchingRecord("Orders", "Order No.", operationRecord, dtJob_sRow("OrderNo").ToString())
+
+                    Dim prodstandardPerSpindle As Double = preactor.ReadFieldDouble("Orders", "K203_ProdstandardPerSpindle", operationRecord)
+
+                    preactor.WriteField("Orders", "Quantity per Hour", operationRecord, maxSpindle * prodstandardPerSpindle)
+                    ''MsgBox("Order no " + operationRecord.ToString)
+                    operationTimes = planningboard.TestOperationOnResource(operationRecord, resourceRecordNum, dtStartTime)
+
+                    If (operationTimes.HasValue) Then
+                        planningboard.PutOperationOnResource(operationRecord, resourceRecordNum, operationTimes.Value.ChangeStart)
+                    Else
+                        strNotSchedulejobs = strNotSchedulejobs + dtJob_sRow("OrderNo").ToString() + " , "
+                    End If
+                    'preactor.Redraw()
+                    'preactor.Commit("Orders")
+                Catch ex As Exception
+                    MsgBox(ex.Message)
+                End Try
+            Next
+            preactor.Commit("Orders")
+            preactor.Redraw()
+            If Not strNotSchedulejobs Is Nothing Then
+                strNotSchedulejobs = strNotSchedulejobs.Remove(strNotSchedulejobs.Length - 3)
+            Else
+                strNotSchedulejobs = ""
+            End If
+
+            If strNotSchedulejobs <> "" Then
+                MsgBox("Orders " + strNotSchedulejobs + " not Scheduled...",, "Information")
+            Else
+                MsgBox("All the seleted Orders have updated...",, "Information")
+            End If
+
+
+        End If
+
+        Return 0
+    End Function
 End Class

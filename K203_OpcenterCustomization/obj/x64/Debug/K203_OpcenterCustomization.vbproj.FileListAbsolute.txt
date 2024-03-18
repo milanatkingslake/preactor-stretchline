@@ -263,3 +263,4 @@ D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_O
 D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Debug\K203_OpcenterCustomization.dll
 D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Debug\K203_OpcenterCustomization.xml
 D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Debug\K203_OpcenterCustomization.pdb
+D:\Kingslake\Development\Preactor\Stretchline\Source\preactor-stretchline\K203_OpcenterCustomization\obj\x64\Debug\K203_OpcenterCustomization.K203_MultipleOrdersDragAndDrop.resources

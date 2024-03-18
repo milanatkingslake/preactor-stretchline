@@ -123,6 +123,12 @@
     <Compile Include="K203_JobSplitDetails.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="K203_MultipleOrdersDragAndDrop.Designer.vb">
+      <DependentUpon>K203_MultipleOrdersDragAndDrop.vb</DependentUpon>
+    </Compile>
+    <Compile Include="K203_MultipleOrdersDragAndDrop.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MyProject\AssemblyInfo.vb" />
     <Compile Include="MyProject\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -148,6 +154,9 @@
   <ItemGroup>
     <EmbeddedResource Include="K203_JobMerge.resx">
       <DependentUpon>K203_JobMerge.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="K203_MultipleOrdersDragAndDrop.resx">
+      <DependentUpon>K203_MultipleOrdersDragAndDrop.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="K203_ReduceQuantiyBulk.resx">
       <DependentUpon>K203_ReduceQuantiyBulk.vb</DependentUpon>
